@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 // Importation de tous les contrôleurs
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ClientController;
-use App\Http\Controllers\Api\VehicleController;
-use App\Http\Controllers\Api\ReservationController;
-use App\Http\Controllers\Api\MaintenanceController;
-use App\Http\Controllers\Api\WashController;
-use App\Http\Controllers\Api\AccidentController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\WashController;
+use App\Http\Controllers\AccidentController;
 
 /*
 |--------------------------------------------------------------------------

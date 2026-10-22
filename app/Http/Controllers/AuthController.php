@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -40,26 +40,26 @@ class AuthController extends Controller
      * Connexion de l'utilisateur
      */
     public function login(LoginRequest $request): JsonResponse
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->only('email', 'password');
 
-        // Tenter de générer un token
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json([
-                'error' => 'Identifiants invalides'
-            ], 401);
-        }
-
-        $user = auth('api')->user();
-
+    if (!$token = JWTAuth::attempt($credentials)) {
         return response()->json([
-            'message' => 'Connexion réussie',
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
-        ]);
+            'error' => 'Identifiants invalides'
+        ], 401);
     }
+
+    // 🔑 Récupérer l'utilisateur via JWTAuth, pas via le guard
+    $user = JWTAuth::user();
+
+    return response()->json([
+        'message'      => 'Connexion réussie',
+        'user'         => $user,
+        'access_token' => $token,
+        'token_type'   => 'bearer',
+        'expires_in'   => config('jwt.ttl') * 60,
+    ]);
+}
 
     /**
      * Récupérer le profil de l'utilisateur connecté
