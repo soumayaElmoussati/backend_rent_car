@@ -18,7 +18,7 @@ class StoreAccidentRequest extends FormRequest
     {
         return [
             'vehicle_id' => ['required', 'exists:vehicles,id'],
-            'incident_date' => ['required', 'date', 'before_or_equal:today'],
+            'incident_date' => ['required', 'date'],
             'location' => ['nullable', 'string', 'max:255'],
             'severity' => ['required', Rule::in(['minor', 'moderate', 'severe', 'total_loss'])],
             'driver_name' => ['nullable', 'string', 'max:255'],

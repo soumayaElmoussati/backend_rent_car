@@ -1,8 +1,8 @@
 <?php
 
-// app/Http/Controllers/Api/AccidentController.php
 
-namespace App\Http\Controllers\Api;
+
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAccidentRequest;
@@ -14,38 +14,16 @@ use Illuminate\Support\Facades\DB;
 
 class AccidentController extends Controller
 {
-    /**
-     * Liste des accidents avec filtres
-     */
-    public function index(Request $request): JsonResponse
+     
+
+public function index(Request $request): JsonResponse
     {
-        $query = Accident::with('vehicle');
+        // On récupère tous les accidents avec leur véhicule associé, triés par date
+        $accidents = Accident::with('vehicle')
+            ->latest('incident_date')
+            ->paginate(10);
 
-        // Filtre par statut (Signalés, En révision, Résolus)
-        if ($request->has('status') && $request->status !== 'tous') {
-            $query->where('status', $request->status);
-        }
-
-        // Filtre par sévérité
-        if ($request->has('severity')) {
-            $query->where('severity', $request->severity);
-        }
-
-        // Recherche par immatriculation ou conducteur
-        if ($request->has('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('driver_name', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhereHas('vehicle', function ($vq) use ($search) {
-                      $vq->where('registration_number', 'like', "%{$search}%")
-                         ->orWhere('brand', 'like', "%{$search}%")
-                         ->orWhere('model', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        // Statistiques pour le dashboard
+        // Statistiques globales pour le dashboard
         $stats = [
             'total' => Accident::count(),
             'signales' => Accident::where('status', 'reported')->count(),
@@ -55,11 +33,11 @@ class AccidentController extends Controller
         ];
 
         return response()->json([
-            'data' => $query->latest('incident_date')->paginate(10),
+            'data' => $accidents,
             'stats' => $stats
         ]);
     }
-
+    
     /**
      * Créer un nouvel accident
      */

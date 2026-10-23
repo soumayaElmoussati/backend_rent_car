@@ -15,9 +15,13 @@ class StoreVehicleRequest extends FormRequest
 
     public function rules(): array
     {
+        $vehicleId = $this->route('vehicle')?->id;
         return [
             // Identification
-            'registration_number' => ['required', 'string', 'max:50', 'unique:vehicles,registration_number'],
+             'registration_number' => [
+               'required', 'string', 'max:50',
+               Rule::unique('vehicles', 'registration_number')->ignore($vehicleId),
+           ],
             'brand' => ['required', 'string', 'max:100'],
             'model' => ['required', 'string', 'max:100'],
             'year' => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
