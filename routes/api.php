@@ -67,6 +67,7 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/{reservation}', [ReservationController::class, 'update']); 
         Route::delete('/{reservation}', [ReservationController::class, 'destroy']); 
         Route::patch('/{reservation}/cancel', [ReservationController::class, 'cancel']); 
+        Route::patch('/{reservation}/confirm', [ReservationController::class, 'confirm']);
     });
 
 
